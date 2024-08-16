@@ -1,67 +1,68 @@
-interface Student {
-  firstName: string,
-  lastName: string,
-  age: number,
-  location: string
+export interface DirectorInterface {
+  workFromHome(): string;
+  getCoffeeBreak(): string;
+  workDirectorTasks(): string;
 }
 
-const student1: Student = {
-  firstName: 'Paul',
-  lastName: 'Jerry',
-  age: 27,
-  location: 'Nigeria'
+export interface TeacherInterface {
+  workFromHome(): string;
+  getCoffeeBreak(): string;
+  workTeacherTasks(): string;
 }
 
-const student2: Student = {
-  firstName: 'Jerry',
-  lastName: 'Parkerson',
-  age: 28,
-  location: 'Edo state'
+export class Director implements DirectorInterface {
+  workFromHome() {
+    return 'Working from home';
+  }
+
+  getCoffeeBreak() {
+    return 'Getting a coffee break';
+  }
+
+  workDirectorTasks() {
+    return 'Getting to director tasks';
+  }
 }
 
-const studentList: Array<Student> = [student1, student2];
+export class Teacher implements TeacherInterface {
+  workFromHome() {
+    return 'Cannot work from home';
+  }
 
-const body: HTMLBodyElement = document.getElementsByTagName("body")[0];
-const table: HTMLTableElement = document.createElement('table');
-const thead: HTMLTableSectionElement = document.createElement('thead');
-const th1: HTMLTableCellElement = document.createElement('th');
-const th2: HTMLTableCellElement = document.createElement('th');
+  getCoffeeBreak() {
+    return 'Cannot have a break';
+  }
 
-th1.innerText = 'First Name';
-th2.innerText = 'Location';
-th1.style.border = '1px solid gray';
-th2.style.border = '1px solid gray';
-th1.style.padding = '.5rem';
-th2.style.padding = '.5rem';
-table.style.border = '1px solid gray';
-table.style.borderCollapse = 'collapse';
+  workTeacherTasks() {
+    return 'Getting to work';
+  }
+}
 
+export function createEmployee(salary: (number | string)): (Director | Teacher) {
+  if (typeof salary === 'number' && salary < 500) {
+    return new Teacher();
+  }
+  return new Director();
+}
 
+export function isDirector(employee: (Director | Teacher)) {
+  return employee instanceof Director;
+}
 
-thead.append(th1);
-thead.append(th2);
+export function executeWork(employee: (Director | Teacher)) {
+  if (isDirector(employee)) {
+    return (employee as Director).workDirectorTasks();
+  }
+  return (employee as Teacher).workTeacherTasks();
+}
 
-table.append(thead);
+export type Subjects = ('Math' | 'History');
 
-
-studentList.forEach((student) => {
-  const row: HTMLTableRowElement = document.createElement('tr');
-
-  const column1: HTMLTableCellElement = document.createElement('td');
-  const column2: HTMLTableCellElement = document.createElement('td');
-
-  column1.innerText = student.firstName;
-  column2.innerText = student.lastName;
-
-  column1.style.border = '1px solid gray';
-  column2.style.border = '1px solid gray';
-  column1.style.padding = '.5rem';
-  column2.style.padding = '.5rem';
-
-  row.append(column1);
-  row.append(column2)
-
-  table.append(row);
-});
-
-body.append(table)
+export function teachClass(todayClass: Subjects): string {
+  if (todayClass === 'Math') {
+    return 'Teaching Math';
+  }
+  if (todayClass === 'History') {
+    return 'Teaching History';
+  }
+}
